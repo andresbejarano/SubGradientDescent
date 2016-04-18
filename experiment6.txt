@@ -1,0 +1,110 @@
+
++---------------------+
+| EXPERIMENT SETTINGS |
++---------------------+
+
+MAX_ITERATIONS: 1000
+REGULARIZATION: L2
+STEP_SIZE: 0.1
+LMBD: 0.1
+FEATURE_SET: BOTH
+
+Training iter: 242    error: 0        gradient: 0.0   bias: 3.4       0.0 %
++------------------------------+
+| PERFORMANCE FOR TRAINING SET |
++------------------------------+
+
+MATCHES:  6398
+MISMATCHES:  0
+TRUE POSITIVES:  3210
+PREDICTED POSITIVES:  3210
+ACTUAL POSITIVES:  3210
+ACCURACY:  1.0
+PRECISION:  1.0
+RECALL:  1.0
+AVERAGE:  1.0
+F-SCORE:  1.0
+
++--------------------------------+
+| PERFORMANCE FOR VALIDATING SET |
++--------------------------------+
+
+MATCHES:  1510
+MISMATCHES:  622
+TRUE POSITIVES:  763
+PREDICTED POSITIVES:  763
+ACTUAL POSITIVES:  1068
+ACCURACY:  0.501570816085
+PRECISION:  1.0
+RECALL:  0.714419475655
+AVERAGE:  0.857209737828
+F-SCORE:  0.833424358274
+
++-----------------------------+
+| PERFORMANCE FOR TESTING SET |
++-----------------------------+
+
+MATCHES:  1495
+MISMATCHES:  637
+TRUE POSITIVES:  760
+PREDICTED POSITIVES:  760
+ACTUAL POSITIVES:  1053
+ACCURACY:  0.491644421209
+PRECISION:  1.0
+RECALL:  0.721747388414
+AVERAGE:  0.860873694207
+F-SCORE:  0.838389409818
+
++---------------------------------------+
+| VALIDATING USING SUB-GRADIENT DESCENT |
++---------------------------------------+
+
+Validating iter: 109    error: 0        gradient: 0.0   bias: -0.4      0.0 %
+
++-----------------------------------------------+
+| PERFORMANCE FOR TRAINING SET AFTER VALIDATION |
++-----------------------------------------------+
+
+MATCHES:  6284
+MISMATCHES:  114
+TRUE POSITIVES:  3155
+PREDICTED POSITIVES:  3155
+ACTUAL POSITIVES:  3210
+ACCURACY:  0.964676239168
+PRECISION:  1.0
+RECALL:  0.982866043614
+AVERAGE:  0.991433021807
+F-SCORE:  0.991358994501
+
++-------------------------------------------------+
+| PERFORMANCE FOR VALIDATING SET AFTER VALIDATION |
++-------------------------------------------------+
+
+MATCHES:  2132
+MISMATCHES:  0
+TRUE POSITIVES:  1068
+PREDICTED POSITIVES:  1068
+ACTUAL POSITIVES:  1068
+ACCURACY:  1.0
+PRECISION:  1.0
+RECALL:  1.0
+AVERAGE:  1.0
+F-SCORE:  1.0
+
++----------------------------------------------+
+| PERFORMANCE FOR TESTING SET AFTER VALIDATION |
++----------------------------------------------+
+
+MATCHES:  1504
+MISMATCHES:  628
+TRUE POSITIVES:  752
+PREDICTED POSITIVES:  752
+ACTUAL POSITIVES:  1053
+ACCURACY:  0.497720885734
+PRECISION:  1.0
+RECALL:  0.714150047483
+AVERAGE:  0.857075023742
+F-SCORE:  0.83324099723
+
+
+In [7]: 

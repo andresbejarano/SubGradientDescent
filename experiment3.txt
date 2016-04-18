@@ -1,0 +1,115 @@
+
++---------------------+
+| EXPERIMENT SETTINGS |
++---------------------+
+
+MAX_ITERATIONS: 1000
+REGULARIZATION: L1
+STEP_SIZE: 0.1
+LMBD: 0.1
+FEATURE_SET: BOTH
+
++-------------------------------------+
+| TRAINING USING SUB-GRADIENT DESCENT |
++-------------------------------------+
+
+Training iter: 231    error: 0        gradient: 0.0   bias: 12.7      0.0 %
+
++------------------------------+
+| PERFORMANCE FOR TRAINING SET |
++------------------------------+
+
+MATCHES:  6398
+MISMATCHES:  0
+TRUE POSITIVES:  3210
+PREDICTED POSITIVES:  3210
+ACTUAL POSITIVES:  3210
+ACCURACY:  1.0
+PRECISION:  1.0
+RECALL:  1.0
+AVERAGE:  1.0
+F-SCORE:  1.0
+
++--------------------------------+
+| PERFORMANCE FOR VALIDATING SET |
++--------------------------------+
+
+MATCHES:  1471
+MISMATCHES:  661
+TRUE POSITIVES:  644
+PREDICTED POSITIVES:  644
+ACTUAL POSITIVES:  1068
+ACCURACY:  0.468682239306
+PRECISION:  1.0
+RECALL:  0.602996254682
+AVERAGE:  0.801498127341
+F-SCORE:  0.752336448598
+
++-----------------------------+
+| PERFORMANCE FOR TESTING SET |
++-----------------------------+
+
+MATCHES:  1468
+MISMATCHES:  664
+TRUE POSITIVES:  649
+PREDICTED POSITIVES:  649
+ACTUAL POSITIVES:  1053
+ACCURACY:  0.46781999794
+PRECISION:  1.0
+RECALL:  0.616334283001
+AVERAGE:  0.8081671415
+F-SCORE:  0.762632197415
+
++---------------------------------------+
+| VALIDATING USING SUB-GRADIENT DESCENT |
++---------------------------------------+
+
+Validating iter: 125    error: 0        gradient: 0.0   bias: 12.0      0.0 %
+
++-----------------------------------------------+
+| PERFORMANCE FOR TRAINING SET AFTER VALIDATION |
++-----------------------------------------------+
+
+MATCHES:  6230
+MISMATCHES:  168
+TRUE POSITIVES:  3101
+PREDICTED POSITIVES:  3101
+ACTUAL POSITIVES:  3210
+ACCURACY:  0.948165140304
+PRECISION:  1.0
+RECALL:  0.966043613707
+AVERAGE:  0.983021806854
+F-SCORE:  0.982728569165
+
++-------------------------------------------------+
+| PERFORMANCE FOR VALIDATING SET AFTER VALIDATION |
++-------------------------------------------------+
+
+MATCHES:  2132
+MISMATCHES:  0
+TRUE POSITIVES:  1068
+PREDICTED POSITIVES:  1068
+ACTUAL POSITIVES:  1068
+ACCURACY:  1.0
+PRECISION:  1.0
+RECALL:  1.0
+AVERAGE:  1.0
+F-SCORE:  1.0
+
++----------------------------------------------+
+| PERFORMANCE FOR TESTING SET AFTER VALIDATION |
++----------------------------------------------+
+
+MATCHES:  1488
+MISMATCHES:  644
+TRUE POSITIVES:  693
+PREDICTED POSITIVES:  693
+ACTUAL POSITIVES:  1053
+ACCURACY:  0.484898172572
+PRECISION:  1.0
+RECALL:  0.65811965812
+AVERAGE:  0.82905982906
+F-SCORE:  0.79381443299
+
+
+In [4]: 

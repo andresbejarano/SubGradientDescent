@@ -1,0 +1,661 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[11pt]{article}
+%\input{mydef.tex}
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage[usenames,dvipsnames]{color} % Required for custom colors
+\usepackage{graphicx} % Required to insert images
+\graphicspath{ {images/} }
+\usepackage{listings} % Required for insertion of code
+\usepackage{courier} % Required for the courier font
+\usepackage{amssymb,amsmath}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{subfigure}
+\usepackage{enumitem}
+\usepackage{bm}
+\usepackage{url}
+\usepackage[stable]{footmisc}
+\usepackage{booktabs}
+\usepackage[square]{natbib}
+\usepackage{indentfirst}
+%\usepackage[colorlinks, linkcolor=red, anchorcolor=purple, citecolor=blue]{hyperref}
+\usepackage{hyperref}
+\usepackage{float}
+
+\usepackage{multicol}
+\setlength{\columnsep}{1cm}
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+\setlength{\headheight}{13.6pt}
+\linespread{1.1} % Line spacing
+
+% Set up the header and footer
+\pagestyle{fancy}
+\lhead{CS 57800} % Top left header
+\chead{}
+\rhead{Howehork 3} % Top right header
+\lfoot{} % Bottom left footer
+\cfoot{} % Bottom center footer
+\rfoot{Page\ \thepage\ of\ \protect\pageref{LastPage}} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+\renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+
+\renewcommand*{\thefootnote}{\fnsymbol{footnote}}
+
+\setlength{\parskip}{.2\baselineskip}
+%\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+\title{
+\textbf{CS57800 Statistical Machine Learning} \\ \textsc{Homework 3} \\
+\normalsize\vspace{0.1in}
+}
+
+\author{
+	\textbf{Andres Bejarano} \\
+	Department of Computer Science\\
+	\texttt{abejara@purdue.edu}
+}
+
+\date{\today}
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle
+%\thispagestyle{empty}
+
+% *--------------------------------------*
+% | Foundations
+% *--------------------------------------*
+\section{Foundations}
+
+
+% *--------------------------------------*
+% | First point
+% *--------------------------------------*
+\subsection{}
+First let's find the VC dimension for the class of convex polygons with $n$ vertices in the plane. Without loss of generality the vertices of the plane are placed in a circle. Selectively we include any of the vertices in the circle. It is seen two possible situations: More negatives than positives and more positives than negatives. Choosing the points on the circle maximizes the number of possible dichotomies (Figure 1). Then we have that the VC dimension for convex n-sided polygons is $2n+1$.
+
+\begin{figure}[H]
+  \caption{Convex n-sided (n vertices) polygons}
+  \includegraphics[scale=0.5]{d1.png}
+  \includegraphics[scale=0.5]{d2.png}
+  \centering
+\end{figure}
+
+Now we know that the VC dimension for all polygons with $n$ vertices is at least $2n + 1$. Then, for all sets of size $2n + 2$ points, there is a labeling of these points that cannot be captured by (even) non-convex polygons with $n$ vertices. Then the VC dimension for all polygons with $n$ vertices is $2n+2$.
+
+% *--------------------------------------*
+% | Second point
+% *--------------------------------------*
+\subsection{}
+
+First we calculate the derivative of the function of the predicted label:
+
+\begin{align*} 
+\hat{y} &= \omega \cdot x + b\\
+&=\sum_{i=1}^{D}\omega_i x_i + b\\
+\end{align*}
+
+Then:
+
+$$\frac{\partial\hat{y}}{\partial\omega_i}=x_i \hspace{1cm} \frac{\partial\hat{y}}{\partial b}=1$$
+
+Now the derivative of the logistic loss function for a fixed value of $y$ applying the chain rule is:
+
+\begin{align*} 
+\ell(y, \hat{y}) &= \frac{1}{\log 2} \log(1+\exp(-y\hat{y}))\\\\
+\frac{\partial\ell(y, \hat{y})}{\partial \hat{y}} &= \frac{1}{\log 2} \frac{-y \exp(-y\hat{y})}{1+ \exp(-y \hat{y})}=\frac{-y \sigma(-y \hat{y})}{\log 2}\\\\
+\frac{\partial\ell(y, \hat{y})}{\partial \omega_i} &= \frac{\partial\ell(y, \hat{y})}{\partial \hat{y}}\frac{\partial\hat{y}}{\partial \omega_i}=\frac{-y x_i \sigma(-y \hat{y})}{\log 2}\\\\
+\frac{\partial\ell(y, \hat{y})}{\partial b} &= \frac{\partial\ell(y, \hat{y})}{\partial \hat{y}}\frac{\partial\hat{y}}{\partial b}=\frac{-y \sigma(-y \hat{y})}{\log 2}\\\\
+\end{align*}
+
+Since the above expressions are positive for any fixed $\hat{y} \in [-1, +1]$ then the logistic loss function is convex.
+
+% *--------------------------------------*
+% | Third point
+% *--------------------------------------*
+\subsection{}
+The training error when a training entry is misclassified is $\frac{1}{n}$. Then it must be guaranteed a training at most $\frac{1}{n}$. Since $\epsilon_t$ for the $t^{th}$ iteration is at most $\gamma$ where $0<\gamma<0.5$ then we have that $\epsilon_t<0.5-\gamma$.
+
+From class notes we have the following expression for the training error in AdaBoost:
+
+$$H \leq e^{(-2 \sum_{t} \gamma^2)}$$
+
+Then the error of the final hypothesis is:
+
+\begin{align*} 
+H &\leq e^{(-2T \gamma^2)}\\
+\ln(H) &\leq -2T \gamma^2\\
+\ln(H) &\geq 2T \gamma^2\\
+\frac{\ln(H)}{2 \gamma^2} &\leq T\\
+\end{align*}
+
+Since $H$ has $n$ training examples we represent that in the expression. Then we got:
+
+$$T \geq \frac{\ln(n)}{2 \gamma^2}$$
+
+% *--------------------------------------*
+% | Fourth point
+% *--------------------------------------*
+\subsection{}
+\begin{figure}[H]
+  \caption{Original set of points}
+  \includegraphics[scale=0.8]{data2.png}
+  \centering
+\end{figure}
+
+\subsection*{Iteration 1:} 
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{2cm}||p{0.7cm}|p{0.7cm}|p{0.7cm}|p{0.7cm}|p{0.7cm}|p{0.7cm}|p{0.7cm}|p{0.7cm}|p{0.7cm}|p{0.7cm}|  }
+ \hline
+ \multicolumn{11}{|c|}{\textbf{\textit{Weights}}} \\
+ \hline
+ \textit{Index} & \textit{1} & \textit{2} & \textit{3} & \textit{4} & \textit{5} & \textit{6} & \textit{7} & \textit{8} & \textit{9} & \textit{10} \\
+ \hline
+ Probability   & 0.1 & 0.1 & 0.1 & 0.1 & 0.1 & 0.1 & 0.1 & 0.1 & 0.1 & 0.1  \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{itemize}
+\item Feature: $x_1$
+    \begin{itemize}
+    \item Threshold = 5.7412376
+    \item Target: [0 0 1 0 0 1 1 0 1 0]
+    \item Predicted: [0 0 1 0 0 1 1 0 0 1]
+    \item $\epsilon_1 = 0.2$
+    \end{itemize}
+\item Feature: $x_2$
+    \begin{itemize}
+    \item Threshold = 7.24551758
+    \item Target: [0 0 1 0 0 1 1 0 1 0]
+    \item Predicted: [0 0 0 0 0 0 0 0 0 0]
+    \item $\epsilon_2 = 0.4$
+    \end{itemize}
+\end{itemize}
+
+Selected feature: $x_1$, Threshold: $x_1 < 5.7412376$, beta = 0.25, alpha = 1.38629436112
+
+\subsection*{Iteration 2:} 
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{2cm}||p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|  }
+ \hline
+ \multicolumn{11}{|c|}{\textbf{\textit{Weights after iteration 1}}} \\
+ \hline
+ \textit{Index} & \textit{1} & \textit{2} & \textit{3} & \textit{4} & \textit{5} & \textit{6} & \textit{7} & \textit{8} & \textit{9} & \textit{10} \\
+ \hline
+ Probability   & 0.0625 & 0.0625 & 0.0625 & 0.0625 & 0.0625 & 0.0625 & 0.0625 & 0.0625 & 0.25 & 0.25  \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{itemize}
+\item Feature: $x_1$
+    \begin{itemize}
+    \item Threshold = 5.7412376
+    \item Target: [0 0 1 0 0 1 1 0 1 0]
+    \item Predicted: [0 0 1 0 0 1 1 0 0 1]
+    \item $\epsilon_1 = 0.5$
+    \end{itemize}
+\item Feature: $x_2$
+    \begin{itemize}
+    \item Threshold = 7.24551758
+    \item Target: [0 0 1 0 0 1 1 0 1 0]
+    \item Predicted: [0 0 0 0 0 0 0 0 0 0]
+    \item $\epsilon_2 = 0.4375$
+    \end{itemize}
+\end{itemize}
+
+Selected feature: $x_2$, Threshold: $x_2 < 7.24551758$, beta = 0.777777777778, alpha = 0.251314428281
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{2cm}||p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|  }
+ \hline
+ \multicolumn{11}{|c|}{\textbf{\textit{Weights after iteration 2}}} \\
+ \hline
+ \textit{Index} & \textit{1} & \textit{2} & \textit{3} & \textit{4} & \textit{5} & \textit{6} & \textit{7} & \textit{8} & \textit{9} & \textit{10} \\
+ \hline
+ Probability   & 0.0555 & 0.0555 & 0.0714 & 0.0555 & 0.0555 & 0.0714 & 0.0714 & 0.0555 & 0.2857 & 0.2222  \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \caption{Hypothesis after two iterations}
+  \includegraphics[scale=0.8]{data3.png}
+  \centering
+\end{figure}
+
+The final hypothesis after two iterations is: 
+
+$$H(x)=(x_1<5.75) + 0.25(x_2<7.25)$$
+
+% *--------------------------------------*
+% | Fifth point
+% *--------------------------------------*
+\subsection{}
+
+Every kernel $K_i$ has an associated feature map $\Phi_i$ and an inner product $\langle \rangle_{H_{K_1}}$. Then, by linearity we have:
+
+$$\alpha K_1(\vec{x}, \vec{y}) = \langle \sqrt{\alpha}\Phi_1(\vec{x}), \sqrt{\alpha}\Phi_1(\vec{y}) \rangle_{H_{K_1}} \hspace{1cm} \beta K_2(\vec{x}, \vec{y}) = \langle \sqrt{\beta}\Phi_2(\vec{x}), \sqrt{\beta}\Phi_2(\vec{y}) \rangle_{H_{K_2}}$$
+
+Then, for $K(\vec{x}, \vec{y})=\alpha K_1(\vec{x}, \vec{y})+\beta K_2(\vec{x}, \vec{y})$ we have:
+
+\begin{align*} 
+K(\vec{x}, \vec{y})&=\alpha K_1(\vec{x}, \vec{y})+\beta K_2(\vec{x}, \vec{y})\\
+&=\langle \sqrt{\alpha}\Phi_1(\vec{x}), \sqrt{\alpha}\Phi_1(\vec{y}) \rangle_{H_{K_1}} + \langle \sqrt{\beta}\Phi_2(\vec{x}), \sqrt{\beta}\Phi_2(\vec{y}) \rangle_{H_{K_2}}\\
+&=\langle [\sqrt{\alpha}\Phi_1(\vec{x}), \sqrt{\beta}\Phi_2(\vec{x})] \rangle, \langle [\sqrt{\alpha}\Phi_1(\vec{y}), \sqrt{\beta}\Phi_2(\vec{y})] \rangle_{H_{new}}\\
+\end{align*}
+
+The last expression indicates that $K$ can be expressed as an inner product. Then, $K(\vec{x}, \vec{y})=\alpha K_1(\vec{x}, \vec{y})+\beta K_2(\vec{x}, \vec{y})$ is a valid kernel.
+
+% *--------------------------------------*
+% | Sixth point
+% *--------------------------------------*
+\subsection{}
+For SVM, the error for the training entry $x_i$ is defined as:
+
+$$E_i=\frac{1}{2}|y_i-sign(x_iw+b)| \neq 0, \xi_i > 1$$
+
+Given the slack variables in the expression, the relation between the $E_i$ error and the slack variables is expressed as:
+
+$$\implies E = \sum_{i=1}^{M} E_i = \sum_{i=1, \xi_i>1}^{M} E_i \leq \sum_{i=1, \xi_i>1}^{M} \xi_i$$
+
+Then, for the $M$ training entries, the training error is bounded by the sum of the slack variables:
+
+$$\xi_i \geq 0, \forall i=1,...,M \implies E \leq \sum_{i=1, \xi_i>1}^{M} \xi_i \leq \sum_{i=1}^{M} \xi_i$$
+
+
+% *--------------------------------------*
+% | Programming Report
+% *--------------------------------------*
+\section{Programming Report}
+
+The Sub-Gradient Descent algorithm was implemented using the hinge loss function. All the indicated parameters are considered by the algorithm and changing them alters the training results. A couple of tasks were performed before running the training method:
+
+\begin{enumerate}
+\item Sentences are cleaned by removing grammatical and grouping symbols.
+\item A dictionary of neutral words is implemented in order to improve the classification mechanism. Such neutral words (in neutral.csv) are mostly English prepositions and auxiliary words. It is assumed that such words are useless for classification since they do not affect on the overall sentiment label of the sentence.
+\end{enumerate}
+
+The training process runs until the training error is zero or it has run the indicated number of iterations. This algorithm converged faster to a error-free weight vector for the training set. 
+
+An important aspect of the experiment was to measure the performance of Gradient Descent using different regularizers. It was observed that using L2 with both unigrams and bigrams feature set has the best performance over the other experiments. The complete set of results for each experiment can be found in the following attahced files: experiment1.txt, experiment2.txt, experiment3.txt, experiment4.txt, experiment5.txt, experiment6.txt.
+
+The following are the parameters and the scored from the executed experiments:
+
+
+
+% *--------------------------------------*
+% | Experiment 1
+% *--------------------------------------*
+\clearpage
+\subsubsection*{Experiment 1:}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{3cm}||p{2cm}|  }
+ \hline
+ \textit{Parameter} & \textit{Value} \\
+ \hline
+ Max Iterations   & 1000 \\
+ Regularization & L1 \\
+ Step Size    & 0.1 \\
+ Lambda    & 0.1 \\
+ Feature Set    & Unigrams \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{2cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|  }
+ \hline
+ \multicolumn{6}{|c|}{\textbf{\textit{Unigrams Metrics (Before validation)}}} \\
+ \hline
+ \textit{Set} & \textit{Accuracy} & \textit{Precision} & \textit{Recall} & \textit{Average} & \textit{F-Score} \\
+ \hline
+ Training   & 1.000 & 1.000 & 1.000 & 1.000 & 1.000 \\
+ Validating & 0.527 & 1.000 & 0.715 & 0.857 & 0.834 \\
+ Testing    & 0.504 & 1.000 & 0.710 & 0.855 & 0.830 \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{2cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|  }
+ \hline
+ \multicolumn{6}{|c|}{\textbf{\textit{Unigrams Metrics (After validation)}}} \\
+ \hline
+ \textit{Set} & \textit{Accuracy} & \textit{Precision} & \textit{Recall} & \textit{Average} & \textit{F-Score} \\
+ \hline
+ Training   & 0.883 & 1.000 & 0.923 & 0.961 & 0.960 \\
+ Validating & 1.000 & 1.000 & 1.000 & 1.000 & 1.000 \\
+ Testing    & 0.508 & 1.000 & 0.680 & 0.840 & 0.810 \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \caption{Number of mismatches during the training process}
+  \includegraphics[scale=1]{unigrams-l1-mismatches.png}
+  \centering
+\end{figure}
+
+
+% *--------------------------------------*
+% | Experiment 2
+% *--------------------------------------*
+\clearpage
+\subsubsection*{Experiment 2:}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{3cm}||p{2cm}|  }
+ \hline
+ \textit{Parameter} & \textit{Value} \\
+ \hline
+ Max Iterations   & 1000 \\
+ Regularization & L1 \\
+ Step Size    & 0.1 \\
+ Lambda    & 0.1 \\
+ Feature Set    & Bigrams \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{2cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|  }
+ \hline
+ \multicolumn{6}{|c|}{\textbf{\textit{Bigrams Metrics (Before validation)}}} \\
+ \hline
+ \textit{Set} & \textit{Accuracy} & \textit{Precision} & \textit{Recall} & \textit{Average} & \textit{F-Score} \\
+ \hline
+ Training   & 1.000 & 1.000 & 0.999 & 0.999 & 0.999 \\
+ Validating & 0.251 & 1.000 & 0.367 & 0.683 & 0.536 \\
+ Testing    & 0.257 & 1.000 & 0.369 & 0.684 & 0.539 \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{2cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|  }
+ \hline
+ \multicolumn{6}{|c|}{\textbf{\textit{Bigrams Metrics (After validation)}}} \\
+ \hline
+ \textit{Set} & \textit{Accuracy} & \textit{Precision} & \textit{Recall} & \textit{Average} & \textit{F-Score} \\
+ \hline
+ Training   & 0.876 & 1.000 & 0.929 & 0.964 & 0.963 \\
+ Validating & 1.000 & 1.000 & 0.999 & 0.999 & 0.999 \\
+ Testing    & 0.264 & 1.000 & 0.999 & 0.999 & 0.999 \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \caption{Number of mismatches during the training process}
+  \includegraphics[scale=1]{bigrams-l1-mismatches.png}
+  \centering
+\end{figure}
+
+
+
+% *--------------------------------------*
+% | Experiment 3
+% *--------------------------------------*
+\clearpage
+\subsubsection*{Experiment 3:}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{3cm}||p{2cm}|  }
+ \hline
+ \textit{Parameter} & \textit{Value} \\
+ \hline
+ Max Iterations   & 1000 \\
+ Regularization & L1 \\
+ Step Size    & 0.1 \\
+ Lambda    & 0.1 \\
+ Feature Set    & Both \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{2cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|  }
+ \hline
+ \multicolumn{6}{|c|}{\textbf{\textit{Both Metrics (Before validation)}}} \\
+ \hline
+ \textit{Set} & \textit{Accuracy} & \textit{Precision} & \textit{Recall} & \textit{Average} & \textit{F-Score} \\
+ \hline
+ Training   & 1.000 & 1.000 & 0.999 & 0.999 & 0.999 \\
+ Validating & 0.468 & 1.000 & 0.602 & 0.801 & 0.752 \\
+ Testing    & 0.467 & 1.000 & 0.616 & 0.808 & 0.762 \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{2cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|  }
+ \hline
+ \multicolumn{6}{|c|}{\textbf{\textit{Both Metrics (After validation)}}} \\
+ \hline
+ \textit{Set} & \textit{Accuracy} & \textit{Precision} & \textit{Recall} & \textit{Average} & \textit{F-Score} \\
+ \hline
+ Training   & 0.948 & 1.000 & 0.966 & 0.983 & 0.982 \\
+ Validating & 1.000 & 1.000 & 0.999 & 0.999 & 0.999 \\
+ Testing    & 0.484 & 1.000 & 0.658 & 0.829 & 0.793 \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \caption{Number of mismatches during the training process}
+  \includegraphics[scale=1]{both-l1-mismatches.png}
+  \centering
+\end{figure}
+
+
+
+% *--------------------------------------*
+% | Experiment 4
+% *--------------------------------------*
+\clearpage
+\subsubsection*{Experiment 4:}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{3cm}||p{2cm}|  }
+ \hline
+ \textit{Parameter} & \textit{Value} \\
+ \hline
+ Max Iterations   & 1000 \\
+ Regularization & L2 \\
+ Step Size    & 0.1 \\
+ Lambda    & 0.1 \\
+ Feature Set    & Unigrams \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{2cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|  }
+ \hline
+ \multicolumn{6}{|c|}{\textbf{\textit{Unigrams Metrics (Before validation)}}} \\
+ \hline
+ \textit{Set} & \textit{Accuracy} & \textit{Precision} & \textit{Recall} & \textit{Average} & \textit{F-Score} \\
+ \hline
+ Training   & 1.000 & 1.000 & 1.000 & 1.000 & 1.000 \\
+ Validating & 0.533 & 1.000 & 0.746 & 0.873 & 0.854 \\
+ Testing    & 0.502 & 1.000 & 0.738 & 0.869 & 0.849 \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{2cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|  }
+ \hline
+ \multicolumn{6}{|c|}{\textbf{\textit{Unigrams Metrics (After validation)}}} \\
+ \hline
+ \textit{Set} & \textit{Accuracy} & \textit{Precision} & \textit{Recall} & \textit{Average} & \textit{F-Score} \\
+ \hline
+ Training   & 0.884 & 1.000 & 0.930 & 0.965 & 0.964 \\
+ Validating & 1.000 & 1.000 & 1.000 & 1.000 & 1.000 \\
+ Testing    & 0.505 & 1.000 & 0.704 & 0.852 & 0.826 \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \caption{Number of mismatches during the training process}
+  \includegraphics[scale=1]{unigrams-l2-mismatches.png}
+  \centering
+\end{figure}
+
+
+
+% *--------------------------------------*
+% | Experiment 5
+% *--------------------------------------*
+\clearpage
+\subsubsection*{Experiment 5:}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{3cm}||p{2cm}|  }
+ \hline
+ \textit{Parameter} & \textit{Value} \\
+ \hline
+ Max Iterations   & 1000 \\
+ Regularization & L2 \\
+ Step Size    & 0.1 \\
+ Lambda    & 0.1 \\
+ Feature Set    & Bigrams \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{2cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|  }
+ \hline
+ \multicolumn{6}{|c|}{\textbf{\textit{Bigrams Metrics (Before validation)}}} \\
+ \hline
+ \textit{Set} & \textit{Accuracy} & \textit{Precision} & \textit{Recall} & \textit{Average} & \textit{F-Score} \\
+ \hline
+ Training   & 1.000 & 1.000 & 0.999 & 0.999 & 0.999 \\
+ Validating & 0.273 & 1.000 & 0.456 & 0.728 & 0.627 \\
+ Testing    & 0.278 & 1.000 & 0.459 & 0.729 & 0.629 \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{2cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|  }
+ \hline
+ \multicolumn{6}{|c|}{\textbf{\textit{Bigrams Metrics (After validation)}}} \\
+ \hline
+ \textit{Set} & \textit{Accuracy} & \textit{Precision} & \textit{Recall} & \textit{Average} & \textit{F-Score} \\
+ \hline
+ Training   & 0.936 & 1.000 & 0.968 & 0.984 & 0.984 \\
+ Validating & 1.000 & 1.000 & 0.999 & 0.999 & 0.999 \\
+ Testing    & 0.294 & 1.000 & 0.481 & 0.740 & 0.650 \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \caption{Number of mismatches during the training process}
+  \includegraphics[scale=1]{bigrams-l2-mismatches.png}
+  \centering
+\end{figure}
+
+
+
+% *--------------------------------------*
+% | Experiment 6
+% *--------------------------------------*
+\clearpage
+\subsubsection*{Experiment 6:}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{3cm}||p{2cm}|  }
+ \hline
+ \textit{Parameter} & \textit{Value} \\
+ \hline
+ Max Iterations   & 1000 \\
+ Regularization & L2 \\
+ Step Size    & 0.1 \\
+ Lambda    & 0.1 \\
+ Feature Set    & Both \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{2cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|  }
+ \hline
+ \multicolumn{6}{|c|}{\textbf{\textit{Both Metrics (Before validation)}}} \\
+ \hline
+ \textit{Set} & \textit{Accuracy} & \textit{Precision} & \textit{Recall} & \textit{Average} & \textit{F-Score} \\
+ \hline
+ Training   & 1.000 & 1.000 & 0.999 & 0.999 & 0.999 \\
+ Validating & 0.501 & 1.000 & 0.714 & 0.857 & 0.833 \\
+ Testing    & 0.491 & 1.000 & 0.721 & 0.860 & 0.838 \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ |p{2cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|  }
+ \hline
+ \multicolumn{6}{|c|}{\textbf{\textit{Both Metrics (After validation)}}} \\
+ \hline
+ \textit{Set} & \textit{Accuracy} & \textit{Precision} & \textit{Recall} & \textit{Average} & \textit{F-Score} \\
+ \hline
+ Training   & 0.964 & 1.000 & 0.982 & 0.991 & 0.991 \\
+ Validating & 1.000 & 1.000 & 0.999 & 0.999 & 0.999 \\
+ Testing    & 0.497 & 1.000 & 0.714 & 0.857 & 0.833 \\
+ \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+  \caption{Number of mismatches during the training process}
+  \includegraphics[scale=1]{both-l2-mismatches.png}
+  \centering
+\end{figure}
+
+%\nocite{*}
+%\bibliographystyle{plainnat}
+%\bibliography{all}
+
+\end{document}
